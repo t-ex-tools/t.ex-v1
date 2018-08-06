@@ -1,0 +1,42 @@
+#search, #controls, #requests, #info, #time-limitation {
+  position: absolute;
+}
+
+#requests-details {
+  height: auto;
+  max-height: 90%;
+  word-break: break-all;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.selected { fill: orange; }
+.search-result { fill: Fuchsia }
+.search-result-highlighted { fill: blue }
+.node:hover { cursor: pointer; }
+.info-row { padding: 10 0; font-size: 12pt }
+.info-row .key { font-weight: bold; margin-right: 10px }
+
+#requests, #aggregated-data {
+  width: 90%;
+  height: 90%;
+  max-height: 90%;
+}
+
+#controls a:hover, #agg-controls a:hover { cursor: pointer; }
+#controls i { color: black; }
+#controls i:hover { color: blue; }
+
+#search-results-list, #info-neighbors {
+  box-shadow: none;
+}
+
+.history-highlight {
+  background: Tomato;
+}
+
+#password-modal {
+  width: 20%;
+  height: 30%;
+  z-index: 999999999 !important;
+}
