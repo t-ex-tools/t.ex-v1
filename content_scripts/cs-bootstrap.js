@@ -6,8 +6,8 @@ var code = document.createTextNode(
 );
 elem.appendChild(code);
 var node = (document.documentElement || document.head || document.body);
-node.insertBefore(elem, node.firstChild);
+// node.insertBefore(elem, node.firstChild);
 
 function bootstrap() {
-  canvasFingerprinting();
+  // canvasFingerprinting();
 }

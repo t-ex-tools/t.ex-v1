@@ -199,7 +199,7 @@ window.addEventListener("accessError", function (message) {
 });
 
 var containerShown = false;
-
+/*
 window.addEventListener("DOMContentLoaded", function() {
 	var container = window.document.createElement("div");
 	container.id = "fingerprints";
@@ -237,6 +237,7 @@ window.addEventListener("DOMContentLoaded", function() {
 		container.appendChild(imgElement);
 	}
 });
+*/
 
 function createImgElement(image) {
 	var imgElement = window.document.createElement("img");

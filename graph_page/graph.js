@@ -2,9 +2,8 @@ var parent = document.getElementById("network");
 parent.style.width = window.innerWidth;
 parent.style.height = window.innerHeight;
 
-var crypt = new JSEncrypt({default_key_size: 2048});
-
 function renderGraph(limit, privateKey, callback) {
+  var crypt = new JSEncrypt({default_key_size: 2048});
   var encAesKey = null;
   var decAesKey = null;
 

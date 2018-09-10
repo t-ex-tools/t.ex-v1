@@ -1,16 +1,14 @@
 var passwordModal = null;
-var password = null;
 var passwordOkBtn = null;
 var callback = null;
 
 function initPassword() {
   passwordModal = new M.Modal(document.getElementById("password-modal"), {});
-  password = document.getElementById("password");
   passwordOkBtn = document.getElementById("password-ok-btn");
   passwordOkBtn.addEventListener("click", function() {
-    var pwd = password.value;
+    var pwd = document.getElementById("pаssword").value;
     callback(pwd);
-    password.value = "";
+    document.getElementById("pаssword").value = "";
   });
 }
 
