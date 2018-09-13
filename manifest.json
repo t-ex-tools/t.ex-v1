@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "Transparency Extension",
+  "name": "T.EX - Transparency EXtension",
   "description": "This extension shows all the data in a request.",
   "version": "1.0",
   "background": {
@@ -22,7 +22,7 @@
   }],
   "browser_action": {
     "default_icon": "icon.png",
-    "default_title": "Track The Trackers",
+    "default_title": "T.EX - Transparency EXtension",
     "default_popup": "popup/popup.html"
   },
   "permissions": [
