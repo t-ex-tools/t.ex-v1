@@ -7,19 +7,9 @@
     "scripts": [
       "sjcl/sjcl.js",
       "jsencrypt/jsencrypt.min.js",
-      "background/background.js",
-      "background/fingerprints-receiver.js"
+      "background/background.js"
     ]
   },
-  "content_scripts": [{
-    "js": [
-      "content_scripts/canvas-fingerprinting.js",
-      "content_scripts/cs-bootstrap.js"
-    ],
-    "run_at": "document_start",
-    "matches": ["<all_urls>"],
-    "all_frames": true
-  }],
   "browser_action": {
     "default_icon": "icon.png",
     "default_title": "T.EX - Transparency EXtension",

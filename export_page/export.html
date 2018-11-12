@@ -24,7 +24,27 @@
         <h2>Please wait a moment. This may take a couple of minutes.</h2>
       </div>
     </div>
+
+    <div id="password-modal" class="modal modal-fixed-footer">
+      <div class="modal-content">
+        <div class="row">
+          <div id="password-modal-content" class="col s12">
+            <div class="input-field col s12">
+              <input placeholder="" id="password" type="password" class="validate">
+              <label for="password">Your password to protect your key: </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" id="password-ok-btn" class="modal-action modal-close waves-effect waves-green btn-flat">OK</a>
+      </div>
+    </div>
+
     <script src="../materialize/materialize.min.js"></script>
+    <script src="../jsencrypt/jsencrypt.min.js"></script>
+    <script src="../sjcl/sjcl.js"></script>
+    <script src="../graph_page/password.js"></script>
     <script src="export.js"></script>
   </body>
 </html>

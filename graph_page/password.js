@@ -6,9 +6,9 @@ function initPassword() {
   passwordModal = new M.Modal(document.getElementById("password-modal"), {});
   passwordOkBtn = document.getElementById("password-ok-btn");
   passwordOkBtn.addEventListener("click", function() {
-    var pwd = document.getElementById("pаssword").value;
+    var pwd = document.getElementById("password").value;
     callback(pwd);
-    document.getElementById("pаssword").value = "";
+    document.getElementById("password").value = "";
   });
 }
 
