@@ -41,7 +41,18 @@ var background = {
     			return tmp;
     		})
     		.reduce(function(result, item, index) {
-    			result[item[0]] = item[1];
+          if (item[0] === "Cookie") {
+            result[item[0]] = item[1]
+              .replace(" ", "")
+              .split(";")
+              .map(function(e) { return e.split("=")})
+              .reduce(function(result, item, index) {
+                result[item[0]] = item[1];
+                return result;
+              }, {});
+          } else {
+            result[item[0]] = item[1];
+          }
     			return result;
     		}, {});
       },

@@ -162,6 +162,7 @@ function renderRequest(item) {
     .set_max_string_length(24)
     .set_replacer(function(k, v) {
       var newValue = v;
+      /*
       if (k === "Cookie") {
         newValue = v
           .replace(" ", "")
@@ -172,6 +173,7 @@ function renderRequest(item) {
             return result;
           }, {});
       }
+      */
       if (k === "time") {
         newValue = new Date(v);
       }
