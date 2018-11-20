@@ -1,3 +1,11 @@
+var numberOfRequests = 0;
+
+chrome.webNavigation.onBeforeNavigate.addListener(function(details) {
+  if (details.frameId === 0) {
+    numberOfRequests = 0;
+  }
+});
+
 var background = {
   init: function() {
     var requestsQueue = [];
@@ -19,6 +27,7 @@ var background = {
         pubKey = result.publicKey;
         aesKey = generateRandomKey();
         encAesKey = crypt.encrypt(aesKey);
+        // encAesKey = aesKey;
       }
     });
 
@@ -70,12 +79,15 @@ var background = {
       //TODO: for some strange reason, sourceUrl can be undefined here
       requestsQueue.push(reqIdMap[details.requestId]);
       // delete reqIdMap[details.requestId];
+      numberOfRequests += 1;
+      // console.log(numberOfRequests);
     	},
       {urls: ["http://*/*", "https://*/*"]},
       ["responseHeaders"]
     );
 
     chrome.webRequest.onErrorOccurred.addListener(function(details) {
+      //console.log("error");
     		if (typeof reqIdMap[details.requestId] === "undefined") {
     			return;
     		}
@@ -99,9 +111,9 @@ var background = {
             if (details.requestBody.raw[0].hasOwnProperty("bytes")) {
               var params = arrayBufferToString(details.requestBody.raw[0].bytes);
               try {
-                var params = JSON.parse(params);
+                params = JSON.parse(params);
               } catch (err) {
-                // console.log("Error parsing request body of " + details.url)
+                params = {raw: params};
               } finally {
                 l.bodyParams = params;
               }
@@ -119,12 +131,17 @@ var background = {
         if (details.type !== "main_frame") {
           if (typeof allTabs[details.tabId] === "undefined" ||
               allTabs[details.tabId].url.startsWith("chrome-extension")) {
+                // console.log("hardError");
                 delete reqIdMap[details.requestId];
           } else {
             if (details.hasOwnProperty("initiator")) {
               reqIdMap[details.requestId]["sourceUrl"] = url2json(new URL(details.initiator));
             }
             getCompletedTabFromId(details.tabId, function(tab) {
+              if (tab === null) {
+                delete reqIdMap[details.requestId];
+                return;
+              }
       				if (typeof reqIdMap[details.requestId] === "undefined") {
       					return;
       				}
@@ -150,6 +167,7 @@ var background = {
         var chunk = {
           lastId: null,
           requests: sjcl.encrypt(aesKey, JSON.stringify(requestsToUpdate)),
+          // requests: JSON.stringify(requestsToUpdate),
           aesKey: encAesKey
         }
         if (result.hasOwnProperty("lastId")) {
@@ -192,7 +210,7 @@ background.init();
 function getCompletedTabFromId(tabId, callback) {
   try {
     chrome.tabs.get(tabId, function(tab) {
-      if (typeof tab === "undefined") {
+      if (chrome.runtime.lastError || typeof tab === "undefined") {
         return;
       } else if (tab.status === "loading") {
         getCompletedTabFromId(tabId, callback);
@@ -201,7 +219,9 @@ function getCompletedTabFromId(tabId, callback) {
       }
     });
   } catch (err) {
-    return;
+    if (err) {
+      callback(null);
+    }
   }
 }
 
