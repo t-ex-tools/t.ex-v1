@@ -134,7 +134,7 @@ var background = {
                 // console.log("hardError");
                 delete reqIdMap[details.requestId];
           } else {
-            if (details.hasOwnProperty("initiator")) {
+            if (details.hasOwnProperty("initiator") && details.initiator !== null) {
               reqIdMap[details.requestId]["sourceUrl"] = url2json(new URL(details.initiator));
             }
             getCompletedTabFromId(details.tabId, function(tab) {
