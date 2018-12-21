@@ -134,8 +134,10 @@ var background = {
                 // console.log("hardError");
                 delete reqIdMap[details.requestId];
           } else {
-            if (details.hasOwnProperty("initiator") && details.initiator !== null) {
+            if (details.hasOwnProperty("initiator") && details.initiator !== null && details.initiator !== "") {
               reqIdMap[details.requestId]["sourceUrl"] = url2json(new URL(details.initiator));
+            } else {
+              console.log(details.initiator);
             }
             getCompletedTabFromId(details.tabId, function(tab) {
               if (tab === null) {
@@ -226,6 +228,7 @@ function getCompletedTabFromId(tabId, callback) {
 }
 
 function url2json(l) {
+  var blacklist = ["searchParams", "toJSON", "toString"];
   var r = {};
   l.parsedParams = {};
   l.time = Date.now();
@@ -233,7 +236,9 @@ function url2json(l) {
     l.parsedParams[pair[0]] = pair[1];
   }
   for (key in l) {
-    r[key] = l[key];
+    if (blacklist.indexOf(key) === -1) {
+      r[key] = l[key];
+    }
   }
   return r;
 }
