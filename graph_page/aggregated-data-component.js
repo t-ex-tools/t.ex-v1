@@ -131,6 +131,7 @@ function reduceRequests(node) {
         pre.push("Header.");
 
         if (globalRequests[v].requestHeaders.hasOwnProperty("Cookie")) {
+          /*
           var cookie = globalRequests[v].requestHeaders.Cookie
             .replace(" ", "")
             .split(";")
@@ -140,6 +141,8 @@ function reduceRequests(node) {
               return result;
             }, {});
           arr.push(cookie);
+          */
+          arr.push(globalRequests[v].requestHeaders.Cookie);
           pre.push("Cookie.");
         }
       }
