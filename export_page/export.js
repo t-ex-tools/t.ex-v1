@@ -1,3 +1,6 @@
+var loadingIndicator = document.getElementById("loading-indicator");
+var text = document.getElementById("text");
+
 initPassword();
 
 chrome.storage.local.get("privateKey", function(result) {
@@ -6,7 +9,6 @@ chrome.storage.local.get("privateKey", function(result) {
       exportData(Date.now(), privateKey, function() {});
     });
   }
-
 });
 
 function decryptPrivateKey(encPrivateKey, callback) {
@@ -54,5 +56,9 @@ function exportData(limit, privateKey, callback) {
 }
 
 function drawData(requests, callback) {
-  document.write(JSON.stringify(requests));
+  var blob = new Blob([JSON.stringify(requests)], {type: "application/json"});
+  var url = URL.createObjectURL(blob);
+  chrome.downloads.download({url: url});
+  loadingIndicator.style.display = "none";
+  text.innerHTML = "Download started!"
 }
