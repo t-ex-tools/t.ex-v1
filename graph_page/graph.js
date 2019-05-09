@@ -3,22 +3,22 @@ parent.style.width = window.innerWidth;
 parent.style.height = window.innerHeight;
 
 function renderGraph(limit, privateKey, callback) {
-  var crypt = new JSEncrypt({default_key_size: 2048});
+  var crypt = new JSEncrypt({ default_key_size: 2048 });
   var encAesKey = null;
   var decAesKey = null;
 
-  chrome.storage.local.get("lastId", function(result) {
+  chrome.storage.local.get("lastId", function (result) {
     if (!result.hasOwnProperty("lastId")) {
       return;
     }
     crypt.setPrivateKey(privateKey);
-    getChunks(result.lastId, [], limit, function(requests) {
+    getChunks(result.lastId, [], limit, function (requests) {
       drawGraph(requests, callback);
     });
   });
 
   function getChunks(id, requests, limit, callback) {
-    chrome.storage.local.get(id + "", function(chunk) {
+    chrome.storage.local.get(id + "", function (chunk) {
       if (chunk[id].lastId == null || (Number.parseInt(chunk[id].lastId) < (Date.now() - limit))) {
         callback(requests.concat(decryptChunk(chunk[id])));
       } else {
@@ -39,23 +39,46 @@ function renderGraph(limit, privateKey, callback) {
   }
 }
 
-function drawGraph(requests, callback) {
-  globalRequests = requests;
-  nodesHashes = [];
-  edgesHashes = [];
-  // this needs to be reset for the real-time visualization
-  graph = null;
-  nodes = [];
-  edges = [];
+function drawGraph(requests, callback) {  
+  data = requests2graph(requests);  
 
-  for (var i=0; i < requests.length; i++) {
+  console.log("Total number of nodes is " + nodes.length);
+  console.log("Total number of edges is " + edges.length);
+  
+  graph = createV4SelectableForceDirectedGraph(d3.select("#network"), data);
+  document.getElementById("time-loading-indicator").style.visibility = "hidden";
+  callback();
+
+  graph.selectAll("rect").on("click.b", function (node) {
+    selection = null;
+  });
+  graph.selectAll("g.node-container").on("click.b", function (node) {
+    if (selection === node) {
+      selection = null;
+    } else {
+      selection = node;
+    }
+  });
+  graph.selectAll("g.node-container").on("dblclick", function (node) {
+    chrome.tabs.create({ url: node.href });
+  });
+
+  console.log("Graph transformed after " + (Date.now() - start) / 1000 + "s");
+}
+
+function requests2graph(requests) {
+  var oldLength = globalRequests.length;
+  globalRequests = globalRequests.concat(requests);
+
+  for (var i = oldLength; i < globalRequests.length; i++) {
+
     if (typeof requests[i] === "undefined" || (requests[i].hasOwnProperty("completed") && !requests[i].completed)) {
       continue;
     }
 
     var targetHash = hashCode(domainName(requests[i].hostname));
     var index = null;
-    requests[i].id = i;
+    requests[i].id = i; //TODO: 
     if ((index = nodesHashes.indexOf(targetHash)) === -1) {
       var target = {
         name: domainName(requests[i].hostname),
@@ -80,8 +103,8 @@ function drawGraph(requests, callback) {
     }
 
     if (typeof requests[i].sourceUrl === "undefined" ||
-        requests[i].sourceUrl === null) {
-          continue;
+      requests[i].sourceUrl === null) {
+      continue;
     }
 
     var sourceHash = hashCode(domainName(requests[i].sourceUrl.hostname));
@@ -108,38 +131,22 @@ function drawGraph(requests, callback) {
       // TODO: maybe think about highlighting higher frequented edges
       // edges[index].value += 1;
     }
-
   }
 
-  console.log("Total number of nodes is " + nodes.length);
-  console.log("Total number of edges is " + edges.length);
-  graph = createV4SelectableForceDirectedGraph(d3.select("#network"), { nodes: nodes, links: edges });
-  document.getElementById("time-loading-indicator").style.visibility = "hidden";
-  callback();
-
-  graph.selectAll("rect").on("click.b", function(node) {
-    selection = null;
-  });
-  graph.selectAll("g.node-container").on("click.b", function(node) {
-    if (selection === node) {
-      selection = null;
-    } else {
-      selection = node;
-    }
-  });
-  graph.selectAll("g.node-container").on("dblclick", function(node) {
-    chrome.tabs.create({url: node.href});
-  });
-
-  console.log("Graph transformed after " + (Date.now() - start) / 1000 + "s");
+  return {
+    nodes: nodes,
+    links: edges
+  }
 }
 
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-  /*
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  //TODO: looks good, doesn't work
   if (message.hasOwnProperty("requests")) {
-    drawGraph(globalRequests.concat(message.requests), function() {
-      return;
-    });
+    var data = requests2graph(message.requests);
+    if (graph !== null) {
+      console.log("ready to update");
+      graph.selectAll("circle").data(data.nodes);
+      graph.selectAll("line").data(data.links);  
+    }
   }
-  */
 });

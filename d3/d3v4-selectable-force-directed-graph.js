@@ -5,7 +5,7 @@ setTimeout(checkFavSetting, 2500);
 function checkFavSetting() {
   setTimeout(checkFavSetting, 2500);
 
-  chrome.storage.local.get("settingsFavicon", function(result) {
+  chrome.storage.local.get("settingsFavicon", function (result) {
     if (result.hasOwnProperty("settingsFavicon")) {
       favSetting = result.settingsFavicon;
     }
@@ -17,31 +17,31 @@ function createV4SelectableForceDirectedGraph(svg, graph) {
   // that d3v4 is called d3v4, otherwise we"ll assume
   // that d3v4 is the default (d3)
   if (typeof d3v4 == "undefined")
-  d3v4 = d3;
+    d3v4 = d3;
 
   let parentWidth = d3v4.select("svg").node().parentNode.clientWidth;
   let parentHeight = d3v4.select("svg").node().parentNode.clientHeight;
 
   var svg = d3v4.select("svg")
-  .attr("width", parentWidth)
-  .attr("height", parentHeight)
+    .attr("width", parentWidth)
+    .attr("height", parentHeight)
 
   // remove any previous graphs
   svg.selectAll(".g-main").remove();
 
   var gMain = svg.append("g")
-  .classed("g-main", true);
+    .classed("g-main", true);
 
   rect = gMain.append("rect")
-  .attr("id", "canvas-background")
-  .attr("width", parentWidth)
-  .attr("height", parentHeight)
-  .style("fill", "white")
+    .attr("id", "canvas-background")
+    .attr("width", parentWidth)
+    .attr("height", parentHeight)
+    .style("fill", "white")
 
   var gDraw = gMain.append("g");
 
   var zoom = d3v4.zoom()
-  .on("zoom", zoomed)
+    .on("zoom", zoomed)
 
   gMain.call(zoom).on("dblclick.zoom", null);
 
@@ -51,13 +51,13 @@ function createV4SelectableForceDirectedGraph(svg, graph) {
 
   var color = d3v4.scaleOrdinal(d3v4.schemeCategory20);
 
-  if (! ("links" in graph)) {
+  if (!("links" in graph)) {
     console.log("Graph is missing links");
     return;
   }
 
   var nodes = {};
-  for (var i=0; i < graph.nodes.length; i++) {
+  for (var i = 0; i < graph.nodes.length; i++) {
     nodes[graph.nodes[i].id] = graph.nodes[i];
     graph.nodes[i].weight = 1.01;
   }
@@ -68,21 +68,21 @@ function createV4SelectableForceDirectedGraph(svg, graph) {
   var gBrush = null;
 
   var link = gDraw.append("g")
-  .attr("class", "link")
-  .selectAll("line")
-  .data(graph.links)
-  .enter().append("line")
-  .attr("stroke-width", function(d) { return Math.sqrt(d.value); })
-  .attr("stroke", "grey")
-  .attr("opacity", 0.6);
+    .attr("class", "link")
+    .selectAll("line")
+    .data(graph.links)
+    .enter().append("line")
+    .attr("stroke-width", function (d) { return Math.sqrt(d.value); })
+    .attr("stroke", "grey")
+    .attr("opacity", 0.6);
 
   var node = gDraw.append("g")
-  .attr("class", "node")
-  .selectAll("g")
-  .data(graph.nodes)
-  .enter()
-  .append("g")
-  .attr("class", "node-container")
+    .attr("class", "node")
+    .selectAll("g")
+    .data(graph.nodes)
+    .enter()
+    .append("g")
+    .attr("class", "node-container")
   /*
   .call(d3v4.drag()
   .on("start", dragstarted)
@@ -91,83 +91,83 @@ function createV4SelectableForceDirectedGraph(svg, graph) {
   */
 
   node
-  .append("circle")
-  .attr("fill", function(d) { return colorScheme(d); })
-  .attr("r", defaultRadius)
-  .append("title")
-  .text(function(d) {
-    if ("name" in d)
-    return d.name;
-    else
-    return d.id;
-  });
+    .append("circle")
+    .attr("fill", function (d) { return colorScheme(d); })
+    .attr("r", defaultRadius)
+    .append("title")
+    .text(function (d) {
+      if ("name" in d)
+        return d.name;
+      else
+        return d.id;
+    });
 
   if (!favSetting) {
-		node.append("image")
-		.attr("xlink:href", function(d) {
-			return "../images/" + domainName(d.name) + ".png";
-		})
-		.on("error", function(d) {
-			d3.selectAll("g.node-container")
-			.filter(function(e) {
-				return e.name === d.name;
-			})
-			.select("image")
-			.attr("xlink:href", "../images/1rx.io.png");
-		})
-		.attr("x", -8)
-		.attr("y", -8)
-		.attr("width", 16)
-		.attr("height", 16);
-	} else {
-		node.append("image")
-		.attr("xlink:href", function(d) {
-			var dName = domainName(d.name);
-			chrome.storage.local.get(dName, function(tNode, result) {
-				if (result.hasOwnProperty(dName)) {
-					d3.select(tNode).attr("xlink:href", result[dName]);
-				} else {
-					var xhr = new XMLHttpRequest();
-					xhr.responseType = "blob";
-					xhr.onreadystatechange = function() {
-						if (xhr.readyState === 4) {
-							var obj = {};
-							var reader = new FileReader();
-							reader.readAsDataURL(xhr.response);
-							reader.onloadend = function() {
-								obj[dName] = reader.result;
-								d3.select(tNode).attr("xlink:href", reader.result);
-								chrome.storage.local.set(obj, function() {});
-							};
-						}
-					}
-					xhr.open("GET", "https://s2.googleusercontent.com/s2/favicons?domain_url=" + domainName(d.name), true);
-					xhr.send();
-				}
-			}.bind(null, this));
-		})
-		.attr("x", -8)
-		.attr("y", -8)
-		.attr("width", 16)
-		.attr("height", 16);
-	}
+    node.append("image")
+      .attr("xlink:href", function (d) {
+        return "../images/" + domainName(d.name) + ".png";
+      })
+      .on("error", function (d) {
+        d3.selectAll("g.node-container")
+          .filter(function (e) {
+            return e.name === d.name;
+          })
+          .select("image")
+          .attr("xlink:href", "../images/1rx.io.png");
+      })
+      .attr("x", -8)
+      .attr("y", -8)
+      .attr("width", 16)
+      .attr("height", 16);
+  } else {
+    node.append("image")
+      .attr("xlink:href", function (d) {
+        var dName = domainName(d.name);
+        chrome.storage.local.get(dName, function (tNode, result) {
+          if (result.hasOwnProperty(dName)) {
+            d3.select(tNode).attr("xlink:href", result[dName]);
+          } else {
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = "blob";
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState === 4) {
+                var obj = {};
+                var reader = new FileReader();
+                reader.readAsDataURL(xhr.response);
+                reader.onloadend = function () {
+                  obj[dName] = reader.result;
+                  d3.select(tNode).attr("xlink:href", reader.result);
+                  chrome.storage.local.set(obj, function () { });
+                };
+              }
+            }
+            xhr.open("GET", "https://s2.googleusercontent.com/s2/favicons?domain_url=" + domainName(d.name), true);
+            xhr.send();
+          }
+        }.bind(null, this));
+      })
+      .attr("x", -8)
+      .attr("y", -8)
+      .attr("width", 16)
+      .attr("height", 16);
+  }
 
   node.append("text")
-  .attr("id", function(d) {
-    return "text-" + d.name;
-  })
-  .attr("class", "node-label")
-  .attr("dx", 16)
-  .attr("dy", ".35em")
-  .attr("stroke", "white")
-  .attr("stroke-width", 0.3)
-  .attr("style", "display: none; font-weight: 800; font-size: 12pt")
-  .text(function(d) { return d.name });
+    .attr("id", function (d) {
+      return "text-" + d.name;
+    })
+    .attr("class", "node-label")
+    .attr("dx", 16)
+    .attr("dy", ".35em")
+    .attr("stroke", "white")
+    .attr("stroke-width", 0.3)
+    .attr("style", "display: none; font-weight: 800; font-size: 12pt")
+    .text(function (d) { return d.name });
 
   var selection = null;
 
-  rect.on("click.a", function() {
-    node.each(function(d) {
+  rect.on("click.a", function () {
+    node.each(function (d) {
       d.selected = false;
       d.previouslySelected = false;
       deselectNodes();
@@ -175,7 +175,7 @@ function createV4SelectableForceDirectedGraph(svg, graph) {
     selection = null;
   });
 
-  node.on("click.a", function(d) {
+  node.on("click.a", function (d) {
     if (selection !== null)
       showLabel(selection, false);
 
@@ -189,16 +189,16 @@ function createV4SelectableForceDirectedGraph(svg, graph) {
     }
   });
 
-  node.on("mouseover", function(d) {
+  node.on("mouseover", function (d) {
     showLabel(d, true);
 
     if (selection != null)
-    return;
+      return;
 
     selectNode(d);
   });
 
-  node.on("mouseout", function(d) {
+  node.on("mouseout", function (d) {
     if (selection !== d)
       showLabel(d, false);
     if (selection != null)
@@ -212,19 +212,19 @@ function createV4SelectableForceDirectedGraph(svg, graph) {
     var label = document.getElementById(id);
     label.style.display = (flag) ? "block" : "none";
 
-    var d3Label = d3v4.selectAll("g.node-container").filter(function(d) {
+    var d3Label = d3v4.selectAll("g.node-container").filter(function (d) {
       return this.childNodes[2].id === id;
     })
     d3Label.raise();
   }
 
   function selectNode(d) {
-    d3v4.selectAll("circle").filter(function(n) {
-        return d.id === n.id;
-      }
+    d3v4.selectAll("circle").filter(function (n) {
+      return d.id === n.id;
+    }
     ).classed("selected", true);
 
-    link.each(function(l) {
+    link.each(function (l) {
       var neighbor = null;
 
       if (l.source.id === d.id) {
@@ -237,7 +237,7 @@ function createV4SelectableForceDirectedGraph(svg, graph) {
         return;
       }
 
-      d3v4.selectAll("circle").select(function(c, i) {
+      d3v4.selectAll("circle").select(function (c, i) {
         if (neighbor.id === c.id) {
           d3v4.select(this).classed("selected", true);
         }
@@ -245,7 +245,7 @@ function createV4SelectableForceDirectedGraph(svg, graph) {
 
     });
 
-    link.attr("stroke", function(l) {
+    link.attr("stroke", function (l) {
       if (d === l.source || d === l.target) {
         return "orange";
       } else {
@@ -255,10 +255,10 @@ function createV4SelectableForceDirectedGraph(svg, graph) {
   }
 
   function deselectNodes() {
-    d3v4.selectAll("circle").each(function(c, i) {
+    d3v4.selectAll("circle").each(function (c, i) {
       d3v4.select(this).classed("selected", false)
     });
-    d3v4.selectAll("text").each(function(c, i) {
+    d3v4.selectAll("text").each(function (c, i) {
       d3v4.select(this).attr("fill", "black")
     });
 
@@ -266,9 +266,9 @@ function createV4SelectableForceDirectedGraph(svg, graph) {
     link.attr("stroke-width", 1);
   }
 
-  var simulation = d3.forceSimulation(nodes)
-    .force("link", d3.forceLink().id(function(d) { return d.index }).distance(100 * linkDistance))
-    .force("collide",d3.forceCollide(function(d) { return 20; }).iterations(1))
+  simulation = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink().id(function (d) { return d.index }).distance(100 * linkDistance))
+    .force("collide", d3.forceCollide(function (d) { return 20; }).iterations(1))
     .force("charge", d3.forceManyBody().strength(parentWidth * nodeCharge))
     .force("center", d3.forceCenter(parentWidth / 2, parentHeight / 2))
     .force("y", d3.forceY(0))
@@ -279,12 +279,12 @@ function createV4SelectableForceDirectedGraph(svg, graph) {
   simulation.force("link").links(graph.links);
 
   function ticked() {
-    link.attr("x1", function(d) { return d.source.x; })
-    .attr("y1", function(d) { return d.source.y; })
-    .attr("x2", function(d) { return d.target.x; })
-    .attr("y2", function(d) { return d.target.y; });
+    link.attr("x1", function (d) { return d.source.x; })
+      .attr("y1", function (d) { return d.source.y; })
+      .attr("x2", function (d) { return d.target.x; })
+      .attr("y2", function (d) { return d.target.y; });
 
-    node.attr("transform", function (d) {return "translate(" + d.x + ", " + d.y + ")";});
+    node.attr("transform", function (d) { return "translate(" + d.x + ", " + d.y + ")"; });
   }
 
   var texts = [""];
@@ -294,8 +294,8 @@ function createV4SelectableForceDirectedGraph(svg, graph) {
     .enter()
     .append("text")
     .attr("x", 900)
-    .attr("y", function(d,i) { return 470 + i * 18; })
-    .text(function(d) { return d; });
+    .attr("y", function (d, i) { return 470 + i * 18; })
+    .text(function (d) { return d; });
 
   return svg;
 };

@@ -1,8 +1,9 @@
 var graph = null;
+var simulation = null;
 var nodes = [];
 var edges = [];
-var nodesHashes;
-var edgesHashes;
+var nodesHashes = [];
+var edgesHashes = [];
 var start = Date.now();
 var selection = null;
 var globalRequests = [];

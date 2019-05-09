@@ -66,7 +66,7 @@ var background = {
     		}, {});
       },
       {urls: ["http://*/*", "https://*/*"]},
-      ["blocking", "requestHeaders"]
+      ["blocking", "requestHeaders", "extraHeaders"]
     );
 
     chrome.webRequest.onCompleted.addListener(function(details) {
