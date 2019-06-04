@@ -161,7 +161,7 @@ var background = {
       if (pubKey === "" || requestsQueue.length === 0) {
         return;
       }
-
+      //console.log(requestsQueue);
       var requestsToUpdate = requestsQueue;
       requestsQueue = [];
       chrome.runtime.sendMessage({requests: requestsToUpdate});

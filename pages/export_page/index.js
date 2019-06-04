@@ -1,7 +1,7 @@
 var loadingIndicator = document.getElementById("loading-indicator");
 var text = document.getElementById("text");
 
-initPassword();
+PasswordModal.load();
 
 chrome.storage.local.get("privateKey", function(result) {
   if (result.hasOwnProperty("privateKey")) {
@@ -12,7 +12,7 @@ chrome.storage.local.get("privateKey", function(result) {
 });
 
 function decryptPrivateKey(encPrivateKey, callback) {
-  var userPassword = passwordPrompt(function(userPassword) {
+  var userPassword = PasswordModal.showPrompt(function(userPassword) {
     var pk = sjcl.decrypt(userPassword, encPrivateKey);
     callback(pk);
   });

@@ -1,16 +1,16 @@
 <html>
   <head>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="../materialize/materialize.min.css"  media="screen,projection"/>
-    <link rel="stylesheet" href="../visjs/vis.min.css"/>
-    <link rel="stylesheet" href="../renderjson/renderjson.css"/>
-    <link rel="stylesheet" href="graph.css"/>
+    <link rel="stylesheet" href="../../lib/materialize/materialize.min.css"  media="screen,projection"/>
+    <link rel="stylesheet" href="../../lib/visjs/vis.min.css"/>
+    <link rel="stylesheet" href="../../lib/renderjson/renderjson.css"/>
+    <link rel="stylesheet" href="index.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </head>
   <body>
     <div class="row" style="padding: 0; margin: 0;">
       <div class="col s12" style="padding: 0; margin: 0;">
-        <div id="network"><svg/></div>
+        <div id="network"><svg></svg></div>
       </div>
 
       <div id="controls" class="col s3" style="min-height: 10%; max-height: 90%;">
@@ -285,24 +285,25 @@
       </div>
     </div>
 
-    <script src="../materialize/materialize.min.js"></script>
-    <script src="../visjs/vis.min.js"></script>
-    <script src="../d3/d3.v4.min.js"></script>
-    <script src="../d3/d3v4-brush-lite.js"></script>
-    <script src="../d3/d3v4-selectable-force-directed-graph.js"></script>
-    <script src="../renderjson/renderjson.js"></script>
-    <script src="../markjs/mark.es6.min.js"></script>
-    <script src="../jsencrypt/jsencrypt.min.js"></script>
-    <script src="../sjcl/sjcl.js"></script>
+    <script src="../../lib/materialize/materialize.min.js"></script>
+    <script src="../../lib/visjs/vis.min.js"></script>
+    <script src="../../lib/d3/d3.v4.min.js"></script>
+    <script src="../../lib/d3/d3v4-brush-lite.js"></script>
+    <script src="../../lib/d3/d3v4-selectable-force-directed-graph.js"></script>
+    <script src="../../lib/renderjson/renderjson.js"></script>
+    <script src="../../lib/markjs/mark.es6.min.js"></script>
+    <script src="../../lib/jsencrypt/jsencrypt.min.js"></script>
+    <script src="../../lib/sjcl/sjcl.js"></script>
 
-    <script src="password.js"></script>
+    <script src="components/PasswordModal.js"></script>
     <script src="globals.js"></script>
-    <script src="controls.js"></script>
-    <script src="aggregated-data-component.js"></script>
-    <script src="requests-component.js"></script>
-    <script src="graph.js"></script>
-    <script src="info-component.js"></script>
-    <script src="settings.js"></script>
+    <script src="components/SearchBar.js"></script>
+    <script src="components/TimeSelectOverlay.js"></script>
+    <script src="components/AggregatedDataModal.js"></script>
+    <script src="components/RequestsModal.js"></script>
+    <script src="index.js"></script>
+    <script src="components/InfoOverlay.js"></script>
+    <script src="components/SettingsModal.js"></script>
     <script src="bootstrap.js"></script>
 
   </body>
