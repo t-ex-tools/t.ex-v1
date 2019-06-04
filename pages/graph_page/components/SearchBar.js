@@ -54,7 +54,7 @@ var SearchBar = {
   },
 
   resetSearch: function() {
-    nodes.forEach(function(d) {
+    Bootstrap.nodes.forEach(function(d) {
       d3v4.select(d3v4.selectAll("circle")["_groups"][0][d.index]).classed("search-result", false);
     });
     SearchBar.searchField.value = "";
@@ -76,7 +76,7 @@ var SearchBar = {
   },
 
   searchFor: function(keyword) {
-    var results = nodes.filter(function(d) {
+    var results = Bootstrap.nodes.filter(function(d) {
       d3v4.select(d3v4.selectAll("circle")["_groups"][0][d.index]).classed("search-result", false);
       return (JSON.stringify(d).indexOf(keyword) !== -1);
     }).map(function(d) {
@@ -144,21 +144,21 @@ var SearchBar = {
       var meta = [];
       var toAdd = false;
   
-      if (globalRequests[d.requests[i]].host.indexOf(keyword) !== -1) {
+      if (Bootstrap.globalRequests[d.requests[i]].host.indexOf(keyword) !== -1) {
         meta.push("URL");
         toAdd = true;
       }
-      if (globalRequests[d.requests[i]].search.indexOf(keyword) !== -1) {
+      if (Bootstrap.globalRequests[d.requests[i]].search.indexOf(keyword) !== -1) {
         meta.push("Parameter");
         toAdd = true;
       }
-      if (globalRequests[d.requests[i]].hasOwnProperty("requestHeaders") &&
-          JSON.stringify(globalRequests[d.requests[i]].requestHeaders).indexOf(keyword) !== -1) {
+      if (Bootstrap.globalRequests[d.requests[i]].hasOwnProperty("requestHeaders") &&
+          JSON.stringify(Bootstrap.globalRequests[d.requests[i]].requestHeaders).indexOf(keyword) !== -1) {
         meta.push("Header");
         toAdd = true;
       }
       if (toAdd) {
-        results.push({node: d.name, index: d.index, foundIn: meta, request: globalRequests[d.requests[i]]});
+        results.push({node: d.name, index: d.index, foundIn: meta, request: Bootstrap.globalRequests[d.requests[i]]});
       }
     }
     return results;

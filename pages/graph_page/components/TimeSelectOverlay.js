@@ -17,8 +17,8 @@ var TimeSelectOverlay = {
           document.getElementById("time-loading-indicator").style.visibility = "visible";
 
           graph = null;
-          nodes = [];
-          edges = [];
+          Bootstrap.nodes = [];
+          Bootstrap.edges = [];
           start = Date.now();
           renderGraph(limit, privateKey, function() {
             InfoOverlay.load();

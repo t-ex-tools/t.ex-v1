@@ -29,7 +29,7 @@ var InfoOverlay = {
 
     // handlers
     graph.selectAll("g.node-container").on("click.c", function(node) {
-      if (selection === node) {
+      if (Bootstrap.selection === node) {
         InfoOverlay.infoComponentContainer.style.display = "none";
         InfoOverlay.collapsible.close(0);
         InfoOverlay.collapsible.close(1);
@@ -46,11 +46,11 @@ var InfoOverlay = {
     });
   
     InfoOverlay.showAllBtn.addEventListener("click", function(e) {
-      if (selection == null) {
+      if (Bootstrap.selection == null) {
         return;
       }
   
-      var windowStart = selection.requests.length - maxNumRequests;
+      var windowStart = Bootstrap.selection.requests.length - maxNumRequests;
       if (windowStart < 0) {
         windowStart = 0;
         RequestsModal.requestsMoreBtn.classList.add("disabled");
@@ -58,18 +58,18 @@ var InfoOverlay = {
       RequestsModal.requestsBackBtn.classList.add("disabled");
   
       // TODO: this is very costly
-      selection.requests
+      Bootstrap.selection.requests
         .sort(function(a, b) {
-          return globalRequests[a].time - globalRequests[b].time;
+          return Bootstrap.globalRequests[a].time - Bootstrap.globalRequests[b].time;
         });
-      RequestsModal.allItems = selection.requests;
+      RequestsModal.allItems = Bootstrap.selection.requests;
   
-      var items = RequestsModal.allItems.slice(windowStart, selection.requests.length)
+      var items = RequestsModal.allItems.slice(windowStart, Bootstrap.selection.requests.length)
         .map(function(index) {
           return {
-            id: globalRequests[index].id,
-            content: globalRequests[index].pathname,
-            start: new Date(globalRequests[index].time),
+            id: Bootstrap.globalRequests[index].id,
+            content: Bootstrap.globalRequests[index].pathname,
+            start: new Date(Bootstrap.globalRequests[index].time),
           };
         });
       RequestsModal.timeline.setOptions({
@@ -85,7 +85,7 @@ var InfoOverlay = {
     });
 
     InfoOverlay.showAggDataBtn.addEventListener("click", function(r) {
-      if (selection == null) {
+      if (Bootstrap.selection == null) {
         return;
       }
   
@@ -102,9 +102,9 @@ var InfoOverlay = {
   renderInfo: function(node) {
     var url = InfoOverlay.url2json(new URL(node.href));
     var nodeName = document.getElementById("info-node-name");
-    nodeName.href = url["protocol"] + "//" + domainName(url["hostname"]);
+    nodeName.href = url["protocol"] + "//" + Bootstrap.domainName(url["hostname"]);
     nodeName.title = nodeName.href;
-    nodeName.innerHTML = domainName(url["hostname"]);
+    nodeName.innerHTML = Bootstrap.domainName(url["hostname"]);
   
     var nodeWhois = document.getElementById("info-node-whois");
     nodeWhois.href = "https://www.whois.com/whois/" + url["hostname"];
@@ -113,21 +113,21 @@ var InfoOverlay = {
     var numReq = document.getElementById("info-num-req");
     numReq.innerHTML = node.requests.length;
   
-    var neighbors = edges.filter(function(edge) {
+    var neighbors = Bootstrap.edges.filter(function(edge) {
       return (node.id === edge.source.id || node.id === edge.target.id);
     });
   
     var nodeSentDataTo = neighbors
       .filter(function(edge) { return (node.id === edge.source.id); })
       .map(function(edge) {
-        var neighborsRequests = nodes[edge.target.index].requests.filter(function(reqId) {
-          if (typeof globalRequests[reqId].sourceUrl === "undefined" ||
-              globalRequests[reqId].sourceUrl === null) {
+        var neighborsRequests = Bootstrap.nodes[edge.target.index].requests.filter(function(reqId) {
+          if (typeof Bootstrap.globalRequests[reqId].sourceUrl === "undefined" ||
+              Bootstrap.globalRequests[reqId].sourceUrl === null) {
                 return false;
           } else {
-            var hash = hashCode(domainName(globalRequests[reqId].sourceUrl.hostname));
-            var index = nodesHashes.indexOf(hash);
-            return nodes[index].id === node.id;
+            var hash = Bootstrap.hashCode(Bootstrap.domainName(Bootstrap.globalRequests[reqId].sourceUrl.hostname));
+            var index = Bootstrap.nodesHashes.indexOf(hash);
+            return Bootstrap.nodes[index].id === node.id;
           }
         });
         return {
@@ -140,13 +140,13 @@ var InfoOverlay = {
       .filter(function(edge) { return (node.id === edge.target.id); })
       .map(function(edge) {
         var neighborsRequests = edge.target.requests.filter(function(reqId) {
-          if (typeof globalRequests[reqId].sourceUrl === "undefined" ||
-              globalRequests[reqId].sourceUrl === null) {
+          if (typeof Bootstrap.globalRequests[reqId].sourceUrl === "undefined" ||
+              Bootstrap.globalRequests[reqId].sourceUrl === null) {
                 return false;
           } else {
-            var hash = hashCode(domainName(globalRequests[reqId].sourceUrl.hostname));
-            var index = nodesHashes.indexOf(hash);
-            return nodes[index].id === edge.source.id;
+            var hash = Bootstrap.hashCode(Bootstrap.domainName(Bootstrap.globalRequests[reqId].sourceUrl.hostname));
+            var index = Bootstrap.nodesHashes.indexOf(hash);
+            return Bootstrap.nodes[index].id === edge.source.id;
           }
         });
         return {
@@ -174,7 +174,7 @@ var InfoOverlay = {
         // link.href = "http://" + n;
         link.title = link.href;
         // link.target = "_blank";
-        link.innerHTML = domainName(n.name);
+        link.innerHTML = Bootstrap.domainName(n.name);
         InfoOverlay.initInteraction(link, n);
   
         var whoisLink = document.createElement("a");
@@ -201,7 +201,7 @@ var InfoOverlay = {
         // link.href = "http://" + n;
         link.title = link.href;
         // link.target = "_blank";
-        link.innerHTML = domainName(n.name);
+        link.innerHTML = Bootstrap.domainName(n.name);
         InfoOverlay.initInteraction(link, n);
   
         var whoisLink = document.createElement("a");
@@ -224,29 +224,29 @@ var InfoOverlay = {
   initInteraction: function(link, n) {
     link.addEventListener("mouseover", function(domain, evt) {
       InfoOverlay.highlightNodeOnHover(domain, true);
-    }.bind(null, domainName(n.name)));
+    }.bind(null, Bootstrap.domainName(n.name)));
   
     link.addEventListener("mouseout", function(domain, evt) {
       InfoOverlay.highlightNodeOnHover(domain, false);
-    }.bind(null, domainName(n.name)));
+    }.bind(null, Bootstrap.domainName(n.name)));
   
     link.addEventListener("click", function(neighbor, evt) {
       neighbor.requests.sort(function(a, b) {
-        return globalRequests[a].time - globalRequests[b].time;
+        return Bootstrap.globalRequests[a].time - Bootstrap.globalRequests[b].time;
       });
       RequestsModal.timeline.setItems(neighbor.requests.map(function(index) {
         return {
-          id: globalRequests[index].id,
-          content: globalRequests[index].pathname,
-          start: new Date(globalRequests[index].time),
+          id: Bootstrap.globalRequests[index].id,
+          content: Bootstrap.globalRequests[index].pathname,
+          start: new Date(Bootstrap.globalRequests[index].time),
         };
       }));
       RequestsModal.timeline.fit();
       graph.selectAll("g.node-container").filter(function(d) {
-        return domainName(d.name) === domainName(neighbor.name);
+        return Bootstrap.domainName(d.name) === Bootstrap.domainName(neighbor.name);
       }).each(function(d) {
         // this.dispatchEvent(new Event("click"));
-        InfoOverlay.highlightNodeOnHover(domainName(neighbor.name), false);
+        InfoOverlay.highlightNodeOnHover(Bootstrap.domainName(neighbor.name), false);
       });
     }.bind(null, n));
   },

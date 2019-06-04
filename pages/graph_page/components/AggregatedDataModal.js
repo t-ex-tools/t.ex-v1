@@ -22,10 +22,10 @@ var AggregatedDataModal = {
     graph.selectAll("g.node-container").on("click.m", function(node) {
       // TODO: ugly timeout bullshit
       setTimeout(function() {
-        if (selection === null) {
+        if (Bootstrap.selection === null) {
           AggregatedDataModal.reducedRequests = null
         } else {
-          AggregatedDataModal.reducedRequests = AggregatedDataModal.reduceRequests(selection);
+          AggregatedDataModal.reducedRequests = AggregatedDataModal.reduceRequests(Bootstrap.selection);
           var trackingRatio = AggregatedDataModal.calculateTrackingRatio();
           // TODO: this breaks the modular pattern a bit
           document.getElementById("info-tracking-ratio").innerHTML = "You disclosed <b>" + trackingRatio.toFixed(2) + "%</b> of your browser history to this node.";
@@ -71,18 +71,18 @@ var AggregatedDataModal = {
   calculateTrackingRatio: function() {
     var reducedRequestsString = JSON.stringify(AggregatedDataModal.reducedRequests);
     var num = 0;
-    for (var i=0; i < browsingHistory.length; i++) {
-      var url = new URL(browsingHistory[i]);
+    for (var i=0; i < Bootstrap.browsingHistory.length; i++) {
+      var url = new URL(Bootstrap.browsingHistory[i]);
   
       //TODO: this is not a solid way to calculate the tracking ratio
-      if (reducedRequestsString.indexOf(browsingHistory[i]) > -1 ||
-          reducedRequestsString.indexOf(encodeURIComponent(browsingHistory[i])) > -1 ||
+      if (reducedRequestsString.indexOf(Bootstrap.browsingHistory[i]) > -1 ||
+          reducedRequestsString.indexOf(encodeURIComponent(Bootstrap.browsingHistory[i])) > -1 ||
           // reducedRequestsString.indexOf(url.hostname) > -1 ||
           (reducedRequestsString.indexOf(url.path) > -1 && typeof url.path !== "undefined")) {
             num += 1;
       }
     }
-    return ((num / browsingHistory.length) * 100);
+    return ((num / Bootstrap.browsingHistory.length) * 100);
   },
 
   toggleAggResetBtn: function(flag) {
@@ -117,17 +117,17 @@ var AggregatedDataModal = {
       var arr = [];
       var pre = [];
 
-      if (globalRequests[v].hasOwnProperty("parsedParams")) {
-        arr.push(globalRequests[v]["parsedParams"]);
+      if (Bootstrap.globalRequests[v].hasOwnProperty("parsedParams")) {
+        arr.push(Bootstrap.globalRequests[v]["parsedParams"]);
         pre.push("Parameter.");
       }
-      if (globalRequests[v].hasOwnProperty("requestHeaders")) {
-        arr.push(globalRequests[v]["requestHeaders"]);
+      if (Bootstrap.globalRequests[v].hasOwnProperty("requestHeaders")) {
+        arr.push(Bootstrap.globalRequests[v]["requestHeaders"]);
         pre.push("Header.");
 
-        if (globalRequests[v].requestHeaders.hasOwnProperty("Cookie")) {
+        if (Bootstrap.globalRequests[v].requestHeaders.hasOwnProperty("Cookie")) {
           /*
-          var cookie = globalRequests[v].requestHeaders.Cookie
+          var cookie = Bootstrap.globalRequests[v].requestHeaders.Cookie
             .replace(" ", "")
             .split(";")
             .map(function(e) { return e.split("=")})
@@ -137,34 +137,34 @@ var AggregatedDataModal = {
             }, {});
           arr.push(cookie);
           */
-          arr.push(globalRequests[v].requestHeaders.Cookie);
+          arr.push(Bootstrap.globalRequests[v].requestHeaders.Cookie);
           pre.push("Cookie.");
         }
       }
-      if (globalRequests[v].hasOwnProperty("bodyParams")) {
-        if (typeof globalRequests[v].bodyParams === "object") {
-          arr.push(globalRequests[v].bodyParams);
+      if (Bootstrap.globalRequests[v].hasOwnProperty("bodyParams")) {
+        if (typeof Bootstrap.globalRequests[v].bodyParams === "object") {
+          arr.push(Bootstrap.globalRequests[v].bodyParams);
         } else {
-          if (typeof globalRequests[v].bodyParams === "string" &&
-              globalRequests[v].bodyParams.includes("=") &&
-              globalRequests[v].bodyParams.includes("&")) {
-                globalRequests[v].bodyParams = globalRequests[v].bodyParams.split("&")
+          if (typeof Bootstrap.globalRequests[v].bodyParams === "string" &&
+              Bootstrap.globalRequests[v].bodyParams.includes("=") &&
+              Bootstrap.globalRequests[v].bodyParams.includes("&")) {
+                Bootstrap.globalRequests[v].bodyParams = Bootstrap.globalRequests[v].bodyParams.split("&")
                 .map(function(e) {
                   // return e.split("=");
                   var tmp = e.split("=");
                   return {key: tmp[0], value: tmp[1]};
                 });
           }
-          arr.push({value: globalRequests[v].bodyParams});
+          arr.push({value: Bootstrap.globalRequests[v].bodyParams});
         }
         pre.push("BodyParam.");
       }
-      if (globalRequests[v].hasOwnProperty("formDataParams")) {
-        var keys = Object.keys(globalRequests[v].formDataParams);
+      if (Bootstrap.globalRequests[v].hasOwnProperty("formDataParams")) {
+        var keys = Object.keys(Bootstrap.globalRequests[v].formDataParams);
         keys.forEach(function(k) {
-          globalRequests[v].formDataParams[k] = JSON.stringify(globalRequests[v].formDataParams[k]);
+          Bootstrap.globalRequests[v].formDataParams[k] = JSON.stringify(Bootstrap.globalRequests[v].formDataParams[k]);
         });
-        arr.push(globalRequests[v].formDataParams);
+        arr.push(Bootstrap.globalRequests[v].formDataParams);
         pre.push("FormData.")
       }
 

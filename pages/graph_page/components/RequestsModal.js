@@ -43,13 +43,13 @@ var RequestsModal = {
   
     RequestsModal.timeline.on("select", function(e) {
       RequestsModal.requestDetailsContainer.innerHTML = "";
-      var renderedRequest = RequestsModal.renderRequest(globalRequests[e.items[0]]);
+      var renderedRequest = RequestsModal.renderRequest(Bootstrap.globalRequests[e.items[0]]);
       if (renderedRequest !== null)
         RequestsModal.requestDetailsContainer.appendChild(renderedRequest);
     });
   
     RequestsModal.timeline.on("doubleClick", function(e) {
-      chrome.tabs.create({url: "http://" + globalRequests[e.item].hostname + globalRequests[e.item].pathname});
+      chrome.tabs.create({url: "http://" + Bootstrap.globalRequests[e.item].hostname + Bootstrap.globalRequests[e.item].pathname});
     });
   },
 
@@ -57,8 +57,8 @@ var RequestsModal = {
     RequestsModal.requestsBackBtn.classList.remove("disabled");
     RequestsModal.requestsMoreBtn.classList.remove("disabled");
   
-    var windowStart = selection.requests.length - ((slideWindow + 1) * maxNumRequests);
-    var windowEnd = selection.requests.length - (slideWindow * maxNumRequests);
+    var windowStart = Bootstrap.selection.requests.length - ((slideWindow + 1) * maxNumRequests);
+    var windowEnd = Bootstrap.selection.requests.length - (slideWindow * maxNumRequests);
     if (windowStart < 0) {
       windowStart = 0;
       RequestsModal.requestsMoreBtn.classList.add("disabled");
@@ -66,19 +66,19 @@ var RequestsModal = {
     if (windowEnd <= 0) {
       return;
     }
-    if (windowStart >= selection.requests.length) {
+    if (windowStart >= Bootstrap.selection.requests.length) {
       return;
     }
-    if (windowEnd >= selection.requests.length) {
-      windowEnd = selection.requests.length;
+    if (windowEnd >= Bootstrap.selection.requests.length) {
+      windowEnd = Bootstrap.selection.requests.length;
       RequestsModal.requestsBackBtn.classList.add("disabled");
     }
     var items = RequestsModal.allItems.slice(windowStart, windowEnd)
       .map(function(index) {
         return {
-          id: globalRequests[index].id,
-          content: globalRequests[index].pathname,
-          start: new Date(globalRequests[index].time),
+          id: Bootstrap.globalRequests[index].id,
+          content: Bootstrap.globalRequests[index].pathname,
+          start: new Date(Bootstrap.globalRequests[index].time),
         };
       });
     RequestsModal.timeline.setOptions({
