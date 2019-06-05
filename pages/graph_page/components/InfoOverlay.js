@@ -50,7 +50,7 @@ var InfoOverlay = {
         return;
       }
   
-      var windowStart = Bootstrap.selection.requests.length - maxNumRequests;
+      var windowStart = Bootstrap.selection.requests.length - Bootstrap.maxNumRequests;
       if (windowStart < 0) {
         windowStart = 0;
         RequestsModal.requestsMoreBtn.classList.add("disabled");

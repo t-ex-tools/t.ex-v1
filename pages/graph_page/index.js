@@ -1,19 +1,28 @@
 var GraphPage = {
   parent: null,
+  svgElement: null,
+  canvasBackground: null,
 
   load: function() {
     GraphPage.parent = document.getElementById("network");
-    GraphPage.parent.style.width = window.innerWidth;
-    GraphPage.parent.style.height = window.innerHeight;
+    GraphPage.svgElement = document.getElementById("svg-element");
+    GraphPage.canvasBackground = document.getElementById("canvas-background");
+    GraphPage.parent.style.width = GraphPage.svgElement.style.width = window.innerWidth;
+    GraphPage.parent.style.height = GraphPage.svgElement.style.height = window.innerHeight;
+
+    window.addEventListener("resize", function() {
+      GraphPage.parent.style.width = GraphPage.svgElement.style.width = Bootstrap.rect._groups[0][0].style.width = window.innerWidth;
+      GraphPage.parent.style.height = GraphPage.svgElement.style.height = Bootstrap.rect._groups[0][0].style.height = window.innerHeight;
+    });
 
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
       //TODO: looks good, doesn't work
       if (message.hasOwnProperty("requests")) {
         var data = GraphPage.requests2graph(message.requests);
-        if (graph !== null) {
+        if (Bootstrap.graph !== null) {
           // console.log("ready to update");
-          graph.selectAll("circle").data(data.nodes);
-          graph.selectAll("line").data(data.links);  
+          Bootstrap.graph.selectAll("circle").data(data.nodes);
+          Bootstrap.graph.selectAll("line").data(data.links);  
         }
       }
     });    

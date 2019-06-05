@@ -20,12 +20,12 @@ var Bootstrap = {
     Bootstrap.event = document.createEvent("Event");
     Bootstrap.event.initEvent("selectionChanged", true, true);
 
-
     PasswordModal.load();
     TimeSelectOverlay.load();
     SearchBar.load();
     RequestsModal.load();
     SettingsModal.load();
+    GraphPage.load();
 
     chrome.storage.local.get("privateKey", function(result) {
       if (result.hasOwnProperty("privateKey")) {

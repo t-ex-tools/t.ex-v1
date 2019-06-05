@@ -57,8 +57,8 @@ var RequestsModal = {
     RequestsModal.requestsBackBtn.classList.remove("disabled");
     RequestsModal.requestsMoreBtn.classList.remove("disabled");
   
-    var windowStart = Bootstrap.selection.requests.length - ((slideWindow + 1) * maxNumRequests);
-    var windowEnd = Bootstrap.selection.requests.length - (slideWindow * maxNumRequests);
+    var windowStart = Bootstrap.selection.requests.length - ((slideWindow + 1) * Bootstrap.maxNumRequests);
+    var windowEnd = Bootstrap.selection.requests.length - (slideWindow * Bootstrap.maxNumRequests);
     if (windowStart < 0) {
       windowStart = 0;
       RequestsModal.requestsMoreBtn.classList.add("disabled");
