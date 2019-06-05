@@ -59,7 +59,7 @@ var GraphPage = {
   drawGraph: function(requests, callback) {
     data = GraphPage.requests2graph(requests);  
 
-    console.log("Total number of Bootstrap.nodesHashes is " + Bootstrap.nodes.length);
+    console.log("Total number of nodes is " + Bootstrap.nodes.length);
     console.log("Total number of edges is " + Bootstrap.edges.length);
     
     graph = createV4SelectableForceDirectedGraph(d3.select("#network"), data);
@@ -154,5 +154,15 @@ var GraphPage = {
       nodes: Bootstrap.nodes,
       links: Bootstrap.edges
     }
+  },
+
+  resetGraph: function() {
+    Bootstrap.globalRequests = [];
+    Bootstrap.graph = null;
+    Bootstrap.nodes = [];
+    Bootstrap.nodesHashes = [];
+    Bootstrap.edges = [];
+    Bootstrap.edgesHashes = [];
+    Bootstrap.start = Date.now();    
   }
 }
