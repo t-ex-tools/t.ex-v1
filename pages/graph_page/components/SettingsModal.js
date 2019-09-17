@@ -15,6 +15,16 @@ var SettingsModal = {
 
   load: function() {
 
+    document.addEventListener("DOMContentLoaded", function() {
+      chrome.storage.local.get(["publicKey", "privateKey"], function(result) {
+        if (!result.hasOwnProperty("publicKey") && !result.hasOwnProperty("privateKey")) {
+          var elems = document.querySelectorAll(".tap-target");
+          var instances = M.TapTarget.init(elems, {});
+          instances[0].open();    
+        }
+      });
+    });
+
     // views & container
     SettingsModal.settingsView = document.getElementById("settings-view");
     SettingsModal.settingsModal = new M.Modal(SettingsModal.settingsView, {ready: SettingsModal.modalReadyFunction, endingTop: "4%"});

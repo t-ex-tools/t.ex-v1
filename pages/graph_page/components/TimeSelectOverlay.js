@@ -4,7 +4,7 @@ var TimeSelectOverlay = {
 
   load: function() {
     TimeSelectOverlay.timeLimitationSelectElement = document.getElementById("time-limitation-select");
-    TimeSelectOverlay.timeLimitationSelect = new M.Select(TimeSelectOverlay.timeLimitationSelectElement, {});
+    TimeSelectOverlay.timeLimitationSelect = new M.FormSelect(TimeSelectOverlay.timeLimitationSelectElement, {});
     TimeSelectOverlay.timeLimitationSelectElement.addEventListener("change", TimeSelectOverlay.changeHandler);
   },
 

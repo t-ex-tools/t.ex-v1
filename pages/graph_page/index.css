@@ -40,3 +40,7 @@
   height: 30%;
   z-index: 999999999 !important;
 }
+
+.tap-target {
+  background-color: #26a69a;
+}
