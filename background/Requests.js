@@ -1,78 +1,74 @@
-var Requests = {
-  requestsQueue: [],
+var Requests = (() => {
+  let requestsQueue = [];
+  let crypt = new JSEncrypt({default_key_size: 2048});
+  let pubKey = null;
+  let aesKey = null;
+  let encAesKey = null;
+  let updateInterval = 1000;
 
-  crypt: new JSEncrypt({default_key_size: 2048}),
-  pubKey: null,
-  aesKey: null,
-  encAesKey: null,
-
-  updateInterval: 10000,
-
-  load: function() {
-    
-    // initialize scheduled task
-    setTimeout(Requests.updateRequests, Requests.updateInterval);
-
-    // get public key
-    chrome.storage.local.get("publicKey", function(result) {
+  load = (() => {
+    chrome.storage.local.get("publicKey", (result) => {
       if (result.hasOwnProperty("publicKey")) {
-        Requests.crypt.setPublicKey(result.publicKey);
-        Requests.pubKey = result.publicKey;
-        Requests.aesKey = Requests.generateRandomKey();
-        Requests.encAesKey = Requests.crypt.encrypt(Requests.aesKey);
+        Requests.setPubKey(result.publicKey);
       }
     });
 
-    // listen for key pair generation
-    chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    chrome.runtime.onMessage.addListener((message) => {
       if (message.hasOwnProperty("pubKey")) {
-        Requests.pubKey = message.pubKey;
-        Requests.crypt.setPublicKey(message.pubKey)
-        Requests.aesKey = Requests.generateRandomKey();
-        Requests.encAesKey = Requests.crypt.encrypt(Requests.aesKey);
+        Requests.setPubKey(message.pubKey);
       } else if (message.hasOwnProperty("delete")) {
-        Requests.pubKey = "";
+        Requests.setPubKey(null);
       }
     });
-  },
+  })();
 
-  updateRequests: function() {
-    setTimeout(Requests.updateRequests, Requests.updateInterval);
-    if (Requests.pubKey === null || Requests.requestsQueue.length === 0) {
+  scheduleWorker = (delay) => setTimeout(updateRequests, delay);
+
+  updateRequests = () => {
+    scheduleWorker(updateInterval);
+
+    if (pubKey === null || requestsQueue.length === 0) {
       return;
     }
     
-    var requestsToUpdate = Requests.requestsQueue;
-    Requests.requestsQueue = [];
-    chrome.runtime.sendMessage({requests: requestsToUpdate});
-    chrome.storage.local.get("lastId", function(result) {
-      var chunk = {
-        lastId: null,
-        requests: sjcl.encrypt(Requests.aesKey, JSON.stringify(requestsToUpdate)),
-        aesKey: Requests.encAesKey
-      }
-      if (result.hasOwnProperty("lastId")) {
-        chunk.lastId = result.lastId;
-      }
-      var obj = {};
-      var currentId = Date.now();
-      obj[currentId] = chunk;
-      chrome.storage.local.set(obj, function() {
-        chrome.storage.local.set({lastId: currentId}, null);
+    var requestsToUpdate = requestsQueue.filter((e) => e.complete);
+    requestsQueue = requestsQueue.filter((e) => !e.complete);
+
+    chrome.storage.local.get("lastId", (result) => {
+      let chunk = {
+        lastId: result.lastId || null,
+        requests: sjcl.encrypt(aesKey, JSON.stringify(requestsToUpdate)),
+        aesKey: encAesKey
+      };
+      let chunkWrap = {};
+      let currentId = Date.now();
+      chunkWrap[currentId] = chunk;
+      chrome.storage.local.set(chunkWrap, () => {
+        chrome.storage.local.set({lastId: currentId}, () => console.log(chunkWrap));
       });
     });
-  },
 
-  // https://stackoverflow.com/a/27747377
-  dec2hex: function(dec) {
-    return ("0" + dec.toString(16)).substr(-2);
-  },
+    chrome.runtime.sendMessage({requests: requestsToUpdate});
+  };
 
-  generateRandomKey: function() {
-    var arr = new Uint8Array((12 || 40) / 2);
-    window.crypto.getRandomValues(arr);
-    return Array.from(arr, Requests.dec2hex).join("");
-  }  
-}
+  return {
+    setPubKey: (publicKey) => {
+      pubKey = publicKey;
+      crypt.setPublicKey(publicKey);
+      aesKey = Requests.generateRandomKey();
+      encAesKey = crypt.encrypt(aesKey)
+      scheduleWorker(0);
+    },
 
-Requests.load();
+    add: (request) => requestsQueue.push(request),
+  
+    dec2hex: (dec) => ("0" + dec.toString(16)).substr(-2),
+  
+    generateRandomKey: () => {
+      var arr = new Uint8Array((12 || 40) / 2);
+      window.crypto.getRandomValues(arr);
+      return Array.from(arr, Requests.dec2hex).join("");
+    }
+  };
+  
+})();

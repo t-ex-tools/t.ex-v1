@@ -28,7 +28,7 @@ var Background = (() => {
     chrome.webRequest
       .onBeforeSendHeaders
         .addListener((details) => 
-          Background.setRequest(details.requestId, {requestHeaders: details.requestHeaders}),
+        Background.setRequest(details.requestId, {requestHeaders: details.requestHeaders}),
         urlFilter, 
         ["requestHeaders", "extraHeaders"]);
 
@@ -46,13 +46,11 @@ var Background = (() => {
 
   pushToQueue = (details, success) => {
     Background.setRequest(details.requestId, {success: success});
-    Requests.requestsQueue.push(Background.getRequest(details.requestId));
+    Requests.add(Background.getRequest(details.requestId));
     delete Background.getRequest(details.requestId);
   };
 
   return {
-    getRequests: () => requests,
-
     getRequest: (requestId) => requests[requestId],
 
     setRequest: (requestId, obj) => requests[requestId] = Object.assign(requests[requestId] || {}, obj),
