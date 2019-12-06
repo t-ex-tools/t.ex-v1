@@ -1,19 +1,13 @@
-var Tabs = {
-  allTabs: {},
+var Tabs = (() => {
+  let tabs = {};
 
-  load: function() {
-    // load tabs
-    chrome.tabs.query({}, function(tabs) {
-      for (var i=0; i < tabs.length; i++) {
-        Tabs.allTabs[tabs[i].id] = tabs[i];
-      }
-    });
+  let load = (() => {
+    chrome.tabs.query({}, (tabs) => tabs.forEach((e) => Tabs.add(e)))
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => Tabs.add(tab));
+  })();
 
-    // initialize listeners
-    chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-      Tabs.allTabs[tabId] = tab;
-    });
-  },
-};
+  return {
+    add: (tab) => tabs[tab.id] = tab,
+  }    
+})();
 
-Tabs.load();

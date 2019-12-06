@@ -6,7 +6,7 @@ var Requests = (() => {
   let encAesKey = null;
   let updateInterval = 1000;
 
-  load = (() => {
+  let load = (() => {
     chrome.storage.local.get("publicKey", (result) => {
       if (result.hasOwnProperty("publicKey")) {
         Requests.setPubKey(result.publicKey);
@@ -22,9 +22,9 @@ var Requests = (() => {
     });
   })();
 
-  scheduleWorker = (delay) => setTimeout(updateRequests, delay);
+  let scheduleWorker = (delay) => setTimeout(updateRequests, delay);
 
-  updateRequests = () => {
+  let updateRequests = () => {
     scheduleWorker(updateInterval);
 
     if (pubKey === null || requestsQueue.length === 0) {
@@ -44,7 +44,7 @@ var Requests = (() => {
       let currentId = Date.now();
       chunkWrap[currentId] = chunk;
       chrome.storage.local.set(chunkWrap, () => {
-        chrome.storage.local.set({lastId: currentId}, () => console.log(chunkWrap));
+        chrome.storage.local.set({lastId: currentId}, () => console.log(requestsToUpdate));
       });
     });
 

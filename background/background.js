@@ -2,7 +2,7 @@ var Background = (() => {
   const urlFilter = {urls: ["http://*/*", "https://*/*"]};
   let requests = {};
 
-  load = (() => {
+  let load = (() => {
 
     chrome.webRequest
       .onBeforeRequest
@@ -44,7 +44,7 @@ var Background = (() => {
 
   })();
 
-  pushToQueue = (details, success) => {
+  let pushToQueue = (details, success) => {
     Background.setRequest(details.requestId, {success: success});
     Requests.add(Background.getRequest(details.requestId));
     delete Background.getRequest(details.requestId);
