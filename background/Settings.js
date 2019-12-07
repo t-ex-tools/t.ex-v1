@@ -1,19 +1,19 @@
-var Settings = {
-  saveBody: false,
+var Settings = (() => {
+  let saveBody = false;
+  let checkSettingsInterval = 2500;
 
-  load: function() {
-    setTimeout(Settings.checkSettings, 2500);
-  },
+  let checkSettings = () => {
+    scheduleWorker();
+    chrome.storage.local.get("settingsBodyFormData", (result) => 
+      Settings.shouldStoreBody(result.settingsBodyFormData || false));
+  };
 
-  checkSettings: function() {
-    setTimeout(Settings.checkSettings, 2500);
+  let scheduleWorker = () => setTimeout(checkSettings, checkSettingsInterval);
 
-    chrome.storage.local.get("settingsBodyFormData", function(result) {
-      if (result.hasOwnProperty("settingsBodyFormData")) {
-        Settings.saveBody = result.settingsBodyFormData;
-      }
-    });
-  }
-}
+  let load = (() => scheduleWorker())();
 
-Settings.load();
+  return {
+    getInterval: () => checkSettingsInterval,
+    shouldStoreBody: (saveBody) => saveBody,
+  };
+})();

@@ -44,7 +44,7 @@ var Requests = (() => {
       let currentId = Date.now();
       chunkWrap[currentId] = chunk;
       chrome.storage.local.set(chunkWrap, () => {
-        chrome.storage.local.set({lastId: currentId}, () => console.log(requestsToUpdate));
+        chrome.storage.local.set({lastId: currentId}, null);
       });
     });
 

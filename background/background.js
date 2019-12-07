@@ -12,7 +12,7 @@ var Background = (() => {
           }
 
           Background.getCompletedTabFromId(details.tabId, (tab) => {
-            if (!Settings.saveBody && details.hasOwnProperty("requestBody")) {
+            if (!Settings.shouldStoreBody && details.hasOwnProperty("requestBody")) {
               delete details.requestBody;
             }
 
