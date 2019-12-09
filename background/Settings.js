@@ -1,5 +1,5 @@
 var Settings = (() => {
-  let saveBody = false;
+  let storeBody = false;
   let checkSettingsInterval = 2500;
 
   let checkSettings = () => {
@@ -10,10 +10,15 @@ var Settings = (() => {
 
   let scheduleWorker = () => setTimeout(checkSettings, checkSettingsInterval);
 
-  let load = (() => scheduleWorker())();
+  let load = (() => {
+    scheduleWorker();
+    window.dispatchEvent(new CustomEvent("background:settings:loaded", {detail: {}}));
+    return () => true;
+  })();
 
   return {
+    isLoaded: () => load(),
     getInterval: () => checkSettingsInterval,
-    shouldStoreBody: (saveBody) => saveBody,
+    shouldStoreBody: () => storeBody,
   };
 })();

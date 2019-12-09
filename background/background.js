@@ -1,3 +1,5 @@
+window.addEventListener("background:main:onRequest", (e) => console.log(e));
+
 var Background = (() => {
   const urlFilter = {urls: ["http://*/*", "https://*/*"]};
   let requests = {};
@@ -12,13 +14,14 @@ var Background = (() => {
           }
 
           Background.getCompletedTabFromId(details.tabId, (tab) => {
-            if (!Settings.shouldStoreBody && details.hasOwnProperty("requestBody")) {
+            if (!Settings.shouldStoreBody() && details.hasOwnProperty("requestBody")) {
               delete details.requestBody;
             }
 
             details.source = tab.url;
             details.complete = true;
 
+            window.dispatchEvent(new CustomEvent("background:main:onRequest", {detail: {request: details}}));
             Background.setRequest(details.requestId, details);
           });
         },
@@ -42,6 +45,8 @@ var Background = (() => {
         .addListener((details) => pushToQueue(details, false),
         urlFilter);
 
+    window.dispatchEvent(new CustomEvent("background:main:loaded", {detail: {}}));
+    return () => true;
   })();
 
   let pushToQueue = (details, success) => {
@@ -51,6 +56,8 @@ var Background = (() => {
   };
 
   return {
+    isLoaded: () => load(),
+
     getRequest: (requestId) => requests[requestId],
 
     setRequest: (requestId, obj) => requests[requestId] = Object.assign(requests[requestId] || {}, obj),

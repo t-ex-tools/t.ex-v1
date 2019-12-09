@@ -20,6 +20,9 @@ var Requests = (() => {
         Requests.setPubKey(null);
       }
     });
+
+    window.dispatchEvent(new CustomEvent("background:requests:loaded", {detail: {}}));
+    return () => true;
   })();
 
   let scheduleWorker = (delay) => setTimeout(updateRequests, delay);
@@ -52,6 +55,8 @@ var Requests = (() => {
   };
 
   return {
+    isLoaded: () => load(),
+
     setPubKey: (publicKey) => {
       pubKey = publicKey;
       crypt.setPublicKey(publicKey);
