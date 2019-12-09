@@ -1,4 +1,4 @@
-window.addEventListener("background:main:onRequest", (e) => console.log(e));
+window.addEventListener("background:requests:stored", (e) => console.log(e));
 
 var Background = (() => {
   const urlFilter = {urls: ["http://*/*", "https://*/*"]};
