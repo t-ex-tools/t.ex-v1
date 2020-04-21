@@ -1,5 +1,6 @@
 var loadingIndicator = document.getElementById("loading-indicator");
 var text = document.getElementById("text");
+var glRequests = [];
 
 PasswordModal.load();
 
@@ -29,16 +30,24 @@ function exportData(limit, privateKey, callback) {
     }
     crypt.setPrivateKey(privateKey);
     getChunks(result.lastId, [], limit, function(requests) {
-      drawData(requests, callback);
+      // drawData(requests, callback);
     });
   });
 
   function getChunks(id, requests, limit, callback) {
     chrome.storage.local.get(id + "", function(chunk) {
+      
+      glRequests = glRequests.concat(decryptChunk(chunk[id]));
+      console.log(glRequests);
+      if (glRequests.length >= 25000) {
+        drawData(glRequests, () => console.log("done"));
+        glRequests = [];
+      }
+
       if (chunk[id].lastId == null || (Number.parseInt(chunk[id].lastId) < (Date.now() - limit))) {
-        callback(requests.concat(decryptChunk(chunk[id])));
+        drawData(glRequests, () => console.log("done"));
       } else {
-        return getChunks(chunk[id].lastId, requests.concat(decryptChunk(chunk[id])), limit, callback)
+        getChunks(chunk[id].lastId, requests.concat(decryptChunk(chunk[id])), limit, callback)
       }
     });
   }
