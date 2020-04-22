@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "T.EX - The Transparency EXtension",
   "description": "Visualize third-party communication with T.EX to identify Web trackers and what they know about you.",
-  "version": "0.9",
+  "version": "0.9.1",
   "background": {
     "scripts": [
       "lib/sjcl/sjcl.js",

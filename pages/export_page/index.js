@@ -47,7 +47,7 @@ function exportData(limit, privateKey, callback) {
       if (chunk[id].lastId == null || (Number.parseInt(chunk[id].lastId) < (Date.now() - limit))) {
         drawData(glRequests, () => console.log("done"));
       } else {
-        getChunks(chunk[id].lastId, requests.concat(decryptChunk(chunk[id])), limit, callback)
+        getChunks(chunk[id].lastId, [], limit, callback)
       }
     });
   }
