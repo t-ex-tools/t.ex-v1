@@ -38,8 +38,7 @@ function exportData(limit, privateKey, callback) {
     chrome.storage.local.get(id + "", function(chunk) {
       
       glRequests = glRequests.concat(decryptChunk(chunk[id]));
-      console.log(glRequests);
-      if (glRequests.length >= 25000) {
+      if (glRequests.length >= 7000) {
         drawData(glRequests, () => console.log("done"));
         glRequests = [];
       }

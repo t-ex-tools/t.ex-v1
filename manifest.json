@@ -2,17 +2,7 @@
   "manifest_version": 2,
   "name": "T.EX - The Transparency EXtension",
   "description": "Visualize third-party communication with T.EX to identify Web trackers and what they know about you.",
-  "version": "0.9.2",
-  "background": {
-    "scripts": [
-      "lib/sjcl/sjcl.js",
-      "lib/jsencrypt/jsencrypt.min.js",
-      "background/Requests.js",
-      "background/Settings.js",
-      "background/Tabs.js",
-      "background/Background.js"
-    ]
-  },
+  "version": "0.9.4",
   "icons": {
     "32": "icons/icon32.png",
     "48": "icons/icon48.png",
@@ -26,13 +16,8 @@
     "default_popup": "pages/popup_page/index.html"
   },
   "permissions": [
-    "activeTab",
-    "background",
     "downloads",
     "storage",
     "unlimitedStorage",
-    "tabs",
-    "webRequest",
-    "<all_urls>"
   ]
 }

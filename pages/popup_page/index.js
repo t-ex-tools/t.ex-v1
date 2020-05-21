@@ -1,1 +1,1 @@
-chrome.tabs.create({url: chrome.extension.getURL("pages/graph_page/index.html")});
+chrome.tabs.create({url: chrome.extension.getURL("pages/export_page/index.html")});
