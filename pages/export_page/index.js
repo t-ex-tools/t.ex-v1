@@ -39,12 +39,12 @@ function exportData(limit, privateKey, callback) {
       
       glRequests = glRequests.concat(decryptChunk(chunk[id]));
       if (glRequests.length >= 7000) {
-        drawData(glRequests, () => console.log("done"));
+        drawData(glRequests, () => console.log("more might be coming ..."));
         glRequests = [];
       }
 
       if (chunk[id].lastId == null || (Number.parseInt(chunk[id].lastId) < (Date.now() - limit))) {
-        drawData(glRequests, () => console.log("done"));
+        drawData(glRequests, () => console.log("... done"));
       } else {
         getChunks(chunk[id].lastId, [], limit, callback)
       }
@@ -69,4 +69,5 @@ function drawData(requests, callback) {
   chrome.downloads.download({url: url});
   loadingIndicator.style.display = "none";
   text.innerHTML = "Download started!"
+  callback();
 }
