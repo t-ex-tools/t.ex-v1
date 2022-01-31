@@ -4,7 +4,7 @@ T.EX is a Web extension for Chrome and Chromium-based browsers to visualize data
 
 ## Deprecation Notice
 
-This version of T.EX (T.EX-v1) is a proof of concept implementation, which is no longer maintained. It can be still used for demonstration purposes. For the most recent version of T.EX (T.EX-v2) check out [t-ex-tools/t.ex]().
+This version of T.EX (T.EX-v1) is a proof of concept implementation, which is no longer maintained. It can be still used for demonstration purposes. For the most recent version of T.EX (T.EX-v2) check out [t-ex-tools/t.ex](https://github.com/t-ex-tools/t.ex).
 
 ## Installation
 
