@@ -14,18 +14,6 @@ var GraphPage = {
       GraphPage.parent.style.width = GraphPage.svgElement.style.width = Bootstrap.rect._groups[0][0].style.width = window.innerWidth;
       GraphPage.parent.style.height = GraphPage.svgElement.style.height = Bootstrap.rect._groups[0][0].style.height = window.innerHeight;
     });
-
-    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-      //TODO: looks good, doesn't work
-      if (message.hasOwnProperty("requests")) {
-        var data = GraphPage.requests2graph(message.requests);
-        if (Bootstrap.graph !== null) {
-          // console.log("ready to update");
-          Bootstrap.graph.selectAll("circle").data(data.nodes);
-          Bootstrap.graph.selectAll("line").data(data.links);  
-        }
-      }
-    });    
   },
 
   renderGraph: function(limit, privateKey, callback) {
@@ -104,7 +92,7 @@ var GraphPage = {
   
       var targetHash = Bootstrap.hashCode(Bootstrap.domainName(requests[i].hostname));
       var index = null;
-      requests[i].id = i; //TODO: 
+      requests[i].id = i;
       if ((index = Bootstrap.nodesHashes.indexOf(targetHash)) === -1) {
         var target = {
           name: Bootstrap.domainName(requests[i].hostname),
@@ -153,9 +141,6 @@ var GraphPage = {
         };
         Bootstrap.edges.push(edge);
         Bootstrap.edgesHashes.push(sourceHash + targetHash);
-      } else {
-        // TODO: maybe think about highlighting higher frequented edges
-        // edges[index].value += 1;
       }
     }
   

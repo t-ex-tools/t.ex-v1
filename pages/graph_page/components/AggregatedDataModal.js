@@ -20,14 +20,12 @@ var AggregatedDataModal = {
 
     // handlers
     graph.selectAll("g.node-container").on("click.m", function(node) {
-      // TODO: ugly timeout bullshit
       setTimeout(function() {
         if (Bootstrap.selection === null) {
           AggregatedDataModal.reducedRequests = null
         } else {
           AggregatedDataModal.reducedRequests = AggregatedDataModal.reduceRequests(Bootstrap.selection);
           var trackingRatio = AggregatedDataModal.calculateTrackingRatio();
-          // TODO: this breaks the modular pattern a bit
           document.getElementById("info-tracking-ratio").innerHTML = "You disclosed <b>" + trackingRatio.toFixed(2) + "%</b> of your browser history to this node.";
         }
       }, 100);
@@ -74,10 +72,8 @@ var AggregatedDataModal = {
     for (var i=0; i < Bootstrap.browsingHistory.length; i++) {
       var url = new URL(Bootstrap.browsingHistory[i]);
   
-      //TODO: this is not a solid way to calculate the tracking ratio
       if (reducedRequestsString.indexOf(Bootstrap.browsingHistory[i]) > -1 ||
           reducedRequestsString.indexOf(encodeURIComponent(Bootstrap.browsingHistory[i])) > -1 ||
-          // reducedRequestsString.indexOf(url.hostname) > -1 ||
           (reducedRequestsString.indexOf(url.path) > -1 && typeof url.path !== "undefined")) {
             num += 1;
       }
@@ -150,7 +146,6 @@ var AggregatedDataModal = {
               Bootstrap.globalRequests[v].bodyParams.includes("&")) {
                 Bootstrap.globalRequests[v].bodyParams = Bootstrap.globalRequests[v].bodyParams.split("&")
                 .map(function(e) {
-                  // return e.split("=");
                   var tmp = e.split("=");
                   return {key: tmp[0], value: tmp[1]};
                 });
@@ -203,7 +198,6 @@ var AggregatedDataModal = {
     .set_show_by_default(true)
     .set_sort_objects(true)
     .set_icons('+', '-')
-    // .set_max_string_length(128)
     (data);
   },
 

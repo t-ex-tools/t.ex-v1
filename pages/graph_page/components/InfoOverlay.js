@@ -57,7 +57,6 @@ var InfoOverlay = {
       }
       RequestsModal.requestsBackBtn.classList.add("disabled");
   
-      // TODO: this is very costly
       Bootstrap.selection.requests
         .sort(function(a, b) {
           return Bootstrap.globalRequests[a].time - Bootstrap.globalRequests[b].time;
@@ -171,9 +170,7 @@ var InfoOverlay = {
         var link = document.createElement("a");
         link.className = "collection-item modal-trigger";
         link.href = "#requests";
-        // link.href = "http://" + n;
         link.title = link.href;
-        // link.target = "_blank";
         link.innerHTML = Bootstrap.domainName(n.name);
         InfoOverlay.initInteraction(link, n);
   
@@ -198,9 +195,7 @@ var InfoOverlay = {
         var link = document.createElement("a");
         link.className = "collection-item modal-trigger";
         link.href = "#requests";
-        // link.href = "http://" + n;
         link.title = link.href;
-        // link.target = "_blank";
         link.innerHTML = Bootstrap.domainName(n.name);
         InfoOverlay.initInteraction(link, n);
   
@@ -245,7 +240,6 @@ var InfoOverlay = {
       graph.selectAll("g.node-container").filter(function(d) {
         return Bootstrap.domainName(d.name) === Bootstrap.domainName(neighbor.name);
       }).each(function(d) {
-        // this.dispatchEvent(new Event("click"));
         InfoOverlay.highlightNodeOnHover(Bootstrap.domainName(neighbor.name), false);
       });
     }.bind(null, n));

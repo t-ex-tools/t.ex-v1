@@ -94,18 +94,14 @@ var RequestsModal = {
     return null;
 
     var blacklist = [
-      // "completed",
       "hash",
       "host",
       "href",
-      // "id",
       "origin",
       "password",
       "port",
-      // "protocol",
       "search",
       "searchParams",
-      // "sourceUrl",
       "toString",
       "username"
     ];

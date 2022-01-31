@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "T.EX - The Transparency EXtension",
-  "description": "Visualize and record third-party communication with T.EX - The Transparency Extension to identify Web trackers and what they know about you.",
-  "version": "0.8",
+  "description": "Proof of concept implementation of T.EX (short for Transparency EXtension). A Lightbeam for Google Chrome.",
+  "version": "1.0",
   "background": {
     "scripts": [
       "lib/sjcl/sjcl.js",
